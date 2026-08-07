@@ -82,8 +82,19 @@
 - Pages: https://trmoo.github.io/aiBasics_trmoo/
 - `.github/workflows/deploy.yml` 이 **푸시할 때마다** `npm ci` → `npm test` → `npm run build` 를 돌리고
   `dist/` 를 Pages 에 올린다. **`dist/` 는 커밋하지 않는다.**
-- `configure-pages@v5` 의 `enablement: true` 덕분에 Settings → Pages 를 손으로 켤 필요가 없다.
 - 시험이 실패하면 배포도 멈춘다. 학습지 정답이 깨진 채로 공개되는 일을 막기 위한 것.
+
+**⚠️ 이 저장소는 `enablement: true` 자동 켜기가 안 됐다.**
+첫 배포에서 `configure-pages` 가 `Resource not accessible by integration` 으로 거부됐다.
+워크플로 토큰에 Pages 사이트 생성 권한이 없어서다
+(`object-oriented` 저장소에서는 됐는데 여기서는 안 됐다 — 저장소마다 Actions 기본 권한 설정이 다를 수 있다).
+
+→ **Settings → Pages → Build and deployment → Source 를 「GitHub Actions」 로 한 번만 바꿔 주면** 된다.
+그 뒤로는 푸시만 하면 자동 배포된다. 워크플로의 해당 단계는 `continue-on-error` 로 두어
+권한이 없어도 배포가 멈추지 않게 고쳐 두었다.
+
+혹시 그래도 안 되면 Settings → Actions → General → Workflow permissions 를
+「Read and write permissions」 로 바꾸면 `enablement: true` 가 동작할 수도 있다.
 
 ### 다음에 할 만한 일
 - 학습지 36쪽 pandas 요약(`df[]`, `loc`, `drop`, `fillna`)을 실습 화면으로 (지금은 각 탭의 🐍 접이 상자에만 있음)

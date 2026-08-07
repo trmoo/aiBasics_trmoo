@@ -1,10 +1,17 @@
 # 깃허브 페이지 자동 배포
 #
-# main 브랜치에 푸시할 때마다 깃허브가 npm test 로 학습지 정답 대조를 돌리고
-# npm run build 로 dist/index.html (한 파일로 묶인 결과물) 을 만들어 Pages 에 올린다.
-# 이렇게 하면 저장소에 dist/ 를 커밋하지 않아도 된다.
+# main 브랜치에 푸시할 때마다 깃허브가
+#   npm ci → npm test(학습지 정답 98가지 대조) → npm run build
+# 를 돌리고, 나온 dist/index.html 한 파일을 Pages 에 올린다.
+# 그래서 저장소에 dist/ 를 커밋하지 않아도 된다.
+# 시험이 실패하면 배포도 멈춘다 — 정답이 깨진 채로 공개되는 것을 막기 위함.
 #
-# configure-pages 의 enablement: true 덕분에 Pages 설정을 손으로 켤 필요가 없다.
+# ⚠️ 처음 한 번만 손으로 해야 하는 일
+#   저장소 Settings → Pages → Build and deployment → Source 를 「GitHub Actions」 로 바꾼다.
+#   (아래 configure-pages 의 enablement 로 자동으로 켜 보려 했으나,
+#    이 저장소에서는 워크플로 토큰에 Pages 생성 권한이 없어 거부되었다.
+#    그래서 그 단계는 continue-on-error 로 두고, 안 되면 조용히 넘어가게 했다.
+#    Source 를 GitHub Actions 로 바꾸고 나면 그 뒤로는 푸시만 하면 자동 배포된다.)
 
 name: Deploy to GitHub Pages
 
@@ -27,9 +34,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -43,8 +50,10 @@ jobs:
       - name: 빌드
         run: npm run build
 
-      # Pages 가 아직 꺼져 있으면 여기서 켜 준다
-      - uses: actions/configure-pages@v5
+      # Pages 가 꺼져 있으면 켜 본다. 권한이 없어 실패해도 배포를 멈추지는 않는다.
+      - name: Pages 설정 확인
+        uses: actions/configure-pages@v5
+        continue-on-error: true
         with:
           enablement: true
 
