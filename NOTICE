@@ -1,0 +1,36 @@
+인공지능 기초 실습실 (ai-basics-lab)
+Copyright 2026 trmoo
+
+이 제품에는 trmoo 가 개발한 소프트웨어가 포함되어 있습니다.
+This product includes software developed by trmoo.
+
+Apache License, Version 2.0 에 따라 배포됩니다.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+
+─────────────────────────────────────────────────────────────────────────────
+저장소에 포함되지 않은 자료
+─────────────────────────────────────────────────────────────────────────────
+
+이 앱은 고등학교 2학년 「인공지능 기초」 수업용 학습지
+「인공지능 기초 노트 v260307.pdf」(36쪽) 를 바탕으로 만들었습니다.
+
+원본 PDF 와 그 안에 실린 교과서 발췌 그림(금성·비상·천재·YBM 교과서 등)은
+저작권 때문에 이 저장소에 포함하지 않습니다. (.gitignore 로 제외)
+
+앱 화면에 담긴 것은 학습지의 「개념·수치·활동」을 다시 구현한 것이며,
+그림과 표는 모두 코드로 새로 그렸습니다.
+
+
+─────────────────────────────────────────────────────────────────────────────
+빌드 도구
+─────────────────────────────────────────────────────────────────────────────
+
+Vite (https://vitejs.dev) — MIT License
+vite-plugin-singlefile (https://github.com/richardtallent/vite-plugin-singlefile) — MIT License
+
+이 둘은 개발·빌드에만 쓰이며, 빌드 결과물(dist/index.html)에는 포함되지 않습니다.
