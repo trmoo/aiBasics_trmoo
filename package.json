@@ -1,0 +1,25 @@
+{
+  "name": "ai-basics-lab",
+  "version": "1.0.0",
+  "description": "고등학교 2학년 「인공지능 기초」 노트 실습실 — 학습지 전체를 직접 조작해 보는 인터랙티브 학습앱",
+  "license": "Apache-2.0",
+  "author": "trmoo",
+  "homepage": "https://trmoo.github.io/aiBasics_trmoo/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trmoo/aiBasics_trmoo.git"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test/run.mjs"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11",
+    "vite-plugin-singlefile": "^2.0.3"
+  }
+}

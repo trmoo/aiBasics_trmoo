@@ -1,0 +1,281 @@
+/* ============================================================================
+ * pipeline.js — 학습지 1쪽 「AI 구현 프로세스의 이해」
+ *
+ *   ① 여섯 단계 지도 : 단계를 누르면 그 단계에서 무엇을 하는지 펼쳐진다
+ *   ② 데이터 형식 분류 : 정형 / 반정형 / 비정형 카드 나누기
+ *   ③ 데이터 유형 분류 : 연속형 / 이산형 / 순서형 / 명목형 / 불리언 카드 나누기
+ *   ④ 괄호 채우기 문제
+ *
+ * Copyright 2026 trmoo
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================================== */
+
+import { h, add, clear, card, sheetHead, note, answer, quizSet, sortQuiz, table, pyBox } from '../../lib/ui.js';
+
+/* 학습지 1~5쪽의 여섯 단계 */
+const STEPS = [
+  {
+    no: '1', t: '문제 정의', d: '목적과 목표 정하기',
+    body: [
+      ['묻는 것', ['무엇이 문제인가?', '얻고자 하는 결과는 무엇인가?', '이를 위해 무엇을 해야 하는가?']],
+      ['AI 를 쓰면 좋은 상황', [
+        '① 데이터나 규칙이 너무 복잡한 경우 — 복잡한 규칙을 사람이 다 프로그래밍하면 시간과 비용이 크게 든다. AI 에게 규칙을 스스로 배우게 한다.',
+        '② 다양한 형태의 데이터를 쓸 경우 — 반정형·비정형 데이터',
+        '③ 아직 파악하지 못한 영역을 연구·해결해야 하는 경우 — 지도·비지도·강화 학습이 미지의 규칙을 찾아낸다.',
+      ]],
+    ],
+  },
+  {
+    no: '2', t: '데이터 수집', d: '학습에 쓸 데이터 모으기',
+    body: [
+      ['네 가지 질문', [
+        '① 무엇을 수집할 것인가 — 어떤 데이터가 필요한지 정의',
+        '② 어떻게 수집할 것인가 — 구체적인 획득 방안',
+        '③ 어떤 상태의 데이터인가 — AI 가 학습할 수 있는 형태인지 확인',
+        '④ 편향성·공정성·개인정보 노출·저작권 검토 (반드시!)',
+      ]],
+      ['수집 방법', ['공공 데이터', '민간 데이터', '직접 수집 (설문·센서)', '웹 크롤링 — 웹사이트에서 자동으로 모으는 기술']],
+    ],
+  },
+  {
+    no: '3', t: '탐색적 데이터 분석', d: 'EDA — 데이터 뜯어보기',
+    body: [
+      ['하는 일', [
+        '① 데이터 유형(type) 확인 — 수치형·범주형·문자형·불리언형',
+        '② 비시각화 분석 — 기술 통계 (평균·중앙값·분산·사분위수·상관계수)',
+        '③ 시각화 분석 — 막대·히스토그램·상자·산점도·히트맵',
+      ]],
+      ['왜 하나', ['수집한 데이터 안에서 무엇이 중요한 특성인지 찾기 위해. 여기서 놓치면 그 뒤 단계가 모두 흔들린다.']],
+    ],
+  },
+  {
+    no: '4', t: '데이터 전처리', d: '학습할 수 있는 모양으로',
+    body: [
+      ['다섯 가지', [
+        '결측치 처리 — 제거하거나 대푯값으로 대체',
+        '이상치 탐지·처리 — 주로 IQR 로 찾는다',
+        '정규화(스케일링) — 수치의 단위를 맞춘다',
+        '인코딩 — 범주형을 숫자로 (레이블·원핫)',
+        '핵심 속성 추출 — 모델 성능에 중요한 속성만 고른다',
+      ]],
+    ],
+  },
+  {
+    no: '5', t: 'AI 모델링', d: '알고리즘 고르고 학습시키기',
+    body: [
+      ['순서', [
+        '모델 선택 — 문제 유형·데이터 특성에 맞는 알고리즘',
+        '데이터 준비 — X·y 분리, 훈련/검증/테스트 분할',
+        '모델 학습 — 손실 함수를 최소화하는 방향으로 가중치를 계속 고친다',
+      ]],
+      ['어떤 모델?', [
+        '이미지·음성·자연어 같은 비정형 데이터 → 딥러닝',
+        '표 형태 데이터나 비교적 단순한 예측 → 기계학습',
+      ]],
+    ],
+  },
+  {
+    no: '6', t: '모델 성능 평가', d: '얼마나 잘하는지 재기',
+    body: [
+      ['분류 모델', ['혼동행렬 → 정확도·정밀도·재현율·F1 점수']],
+      ['회귀 모델', ['MAE·MSE·RMSE 는 작을수록 좋고, 결정계수 R² 는 1 에 가까울수록 좋다']],
+    ],
+  },
+];
+
+export function render(root) {
+  add(root, sheetHead('학습지 1~5쪽', 'AI 구현 프로세스의 이해',
+    ['[12인기01-02]', '[12인기02-01]'],
+    [
+      '인공지능으로 문제를 해결하는 여섯 단계의 흐름을 설명할 수 있다.',
+      '데이터를 형식(정형·반정형·비정형)과 유형(수치형·범주형·문자형·불리언형)으로 구분할 수 있다.',
+    ]));
+
+  root.append(stepMap());
+  root.append(formatCard());
+  root.append(typeCard());
+  root.append(blankCard());
+}
+
+/* ───────────────────────── ① 여섯 단계 지도 ───────────────────────── */
+
+function stepMap() {
+  const detail = h('div', { style: { marginTop: '16px' } });
+  const steps = [];
+
+  function show(i) {
+    steps.forEach((s, k) => s.classList.toggle('on', k === i));
+    const st = STEPS[i];
+    clear(detail);
+    add(detail, [
+      h('div', { class: 'note' },
+        h('b', {}, `${st.no}. ${st.t} `),
+        h('span', {}, st.d)),
+      st.body.map(([title, items]) => h('div', { style: { marginTop: '12px' } },
+        h('b', { style: { color: 'var(--ink-soft)' } }, title),
+        h('ul', { style: { margin: '4px 0 0', paddingLeft: '22px' } },
+          items.map((x) => h('li', {}, x))))),
+    ]);
+  }
+
+  const bar = h('div', { class: 'steps' },
+    STEPS.map((s, i) => {
+      const el = h('div', { class: 'step', onclick: () => show(i) },
+        h('div', { class: 'no' }, s.no),
+        h('div', { class: 't' }, s.t),
+        h('div', { class: 'd' }, s.d));
+      steps.push(el);
+      return el;
+    }));
+
+  const c = card('🗺️ AI 구현 프로세스 — 단계를 눌러 보세요',
+    h('div', { class: 'lead' }, '여섯 단계는 한 방향으로만 흐르지 않습니다. 평가 결과가 나쁘면 전처리나 데이터 수집으로 되돌아갑니다.'),
+    bar, detail);
+  show(0);
+  return c;
+}
+
+/* ───────────────────── ② 데이터 형식 (정형/반정형/비정형) ───────────── */
+
+function formatCard() {
+  const explain = table(
+    ['형식', '설명', '예'],
+    [
+      [h('td', { style: { fontWeight: '800' } }, '정형'),
+        h('td', { class: 'left' }, ['명시적인 ', answer('속성'), ' 이 있는 데이터. 미리 정해진 형식과 구조에 맞게 행(레코드)과 열(속성)로 이루어진 표 형태.']),
+        h('td', { class: 'left' }, '엑셀 표, 데이터베이스 테이블, CSV')],
+      [h('td', { style: { fontWeight: '800' } }, [answer('반정형')]),
+        h('td', { class: 'left' }, '구조화된 일부 데이터를 뽑아낼 수 있지만, 구조화되지 않은 데이터도 함께 들어 있는 데이터.'),
+        h('td', { class: 'left' }, 'JSON, XML, HTML, 로그 파일, 센서 기록')],
+      [h('td', { style: { fontWeight: '800' } }, '비정형'),
+        h('td', { class: 'left' }, '속성을 미리 정의하기 어려운, 정형화되지 않은 데이터. 기계학습·자연어 처리·이미지/음성 인식에서 중요.'),
+        h('td', { class: 'left' }, '이미지, 비디오, 텍스트, 오디오')],
+    ]);
+
+  const quiz = sortQuiz(
+    [
+      { id: 'st', label: '정형 데이터' },
+      { id: 'semi', label: '반정형 데이터' },
+      { id: 'un', label: '비정형 데이터' },
+    ],
+    [
+      { text: '반 학생 키·몸무게 엑셀 표', bin: 'st' },
+      { text: '학교 홈페이지 HTML', bin: 'semi' },
+      { text: '체육대회 사진 200장', bin: 'un' },
+      { text: '급식 만족도 설문 CSV', bin: 'st' },
+      { text: '수업 녹음 파일', bin: 'un' },
+      { text: '날씨 API 가 준 JSON', bin: 'semi' },
+      { text: '도서관 대출 기록 표', bin: 'st' },
+      { text: '독서 감상문 글', bin: 'un' },
+      { text: '스마트워치 심박 로그', bin: 'semi' },
+    ]);
+
+  return card('📦 데이터 형식 — 정형 · 반정형 · 비정형',
+    explain,
+    h('h4', {}, '카드를 알맞은 곳에 담아 보세요'),
+    quiz,
+    note('warn', h('b', {}, '헷갈리는 것 '),
+      'JSON·HTML·로그는 「구조가 아예 없는 것」이 아니라 「표로 바로 못 옮기는 구조」라서 반정형입니다. ',
+      '표의 한 칸에 넣을 수 없고, 태그나 키로 감싸여 있지요.'));
+}
+
+/* ─────────────────── ③ 데이터 유형 (수치형/범주형/…) ─────────────── */
+
+function typeCard() {
+  const explain = table(
+    ['큰 갈래', '작은 갈래', '설명', '예'],
+    [
+      [h('td', { rowspan: '2', style: { fontWeight: '800', background: '#eef4ff' } }, '수치형 (numerical)'),
+        '연속형', h('td', { class: 'left' }, '값 사이에 간격 없이 이어지는 값'), h('td', { class: 'left' }, '키, 시간, 온도, 무게')],
+      ['이산형', h('td', { class: 'left' }, '셀 수 있는 값'), h('td', { class: 'left' }, '사람 수, 물건 수, 나이')],
+      [h('td', { rowspan: '2', style: { fontWeight: '800', background: '#f3eeff' } }, '범주형 (categorical)'),
+        '순서형', h('td', { class: 'left' }, '범주로 구분되고 순서를 매길 수 있음'), h('td', { class: 'left' }, '학점, 등급, 상·중·하')],
+      ['명목형', h('td', { class: 'left' }, '범주로 구분되지만 순서를 매길 수 없음'), h('td', { class: 'left' }, '남녀, 혈액형, 국적')],
+      [h('td', { colspan: '2', style: { fontWeight: '800', background: '#fff6e5' } }, '문자형 (object)'),
+        h('td', { class: 'left' }, '문자로만 또는 문자와 숫자로 이루어진 데이터'), h('td', { class: 'left' }, '로그인 ID')],
+      [h('td', { colspan: '2', style: { fontWeight: '800', background: '#eefaf4' } }, '불리언형 (boolean)'),
+        h('td', { class: 'left' }, '참·거짓 둘 중 하나'), h('td', { class: 'left' }, '출석 여부, 동의 여부')],
+    ]);
+
+  const quiz = sortQuiz(
+    [
+      { id: 'cont', label: '연속형' },
+      { id: 'disc', label: '이산형' },
+      { id: 'ord', label: '순서형' },
+      { id: 'nom', label: '명목형' },
+      { id: 'bool', label: '불리언형' },
+      { id: 'obj', label: '문자형' },
+    ],
+    [
+      { text: '키 171.3cm', bin: 'cont' },
+      { text: '형제 수 2명', bin: 'disc' },
+      { text: '성적 등급 A/B/C', bin: 'ord' },
+      { text: '혈액형 O형', bin: 'nom' },
+      { text: '지각 여부 True', bin: 'bool' },
+      { text: '학생 아이디 s2401', bin: 'obj' },
+      { text: '교실 온도 24.7℃', bin: 'cont' },
+      { text: '만족도 상·중·하', bin: 'ord' },
+      { text: '좋아하는 과목', bin: 'nom' },
+      { text: '결석 일수 3일', bin: 'disc' },
+    ]);
+
+  return card('🏷️ 데이터 유형 — 어떤 종류의 값인가',
+    h('div', { class: 'lead' }, '유형을 잘못 보면 전처리도 모델 선택도 어긋납니다. 예를 들어 「학년」은 숫자로 적혀 있어도 실은 순서형입니다.'),
+    explain,
+    h('h4', {}, '카드를 알맞은 곳에 담아 보세요'),
+    quiz,
+    note('', h('b', {}, '구분하는 요령 '),
+      '① 더하거나 평균 낼 수 있으면 수치형입니다. 학번을 평균 내면 뜻이 없으니 수치형이 아니지요. ',
+      '② 수치형 안에서는 「사이 값이 있느냐」를 봅니다. 키 170과 171 사이에는 170.5가 있지만, 사람 2명과 3명 사이에는 없습니다.'),
+    pyBox([
+      "df.info()          # 각 열의 자료형(dtype)과 결측치 개수",
+      "df.dtypes          # int64, float64, object, bool …",
+      "df['등급'].unique()  # 범주가 몇 가지인지 확인",
+      "df['등급'].nunique() # 범주의 가짓수",
+    ].join('\n')));
+}
+
+/* ─────────────────────────── ④ 괄호 채우기 ───────────────────────── */
+
+function blankCard() {
+  return card('✏️ 학습지 괄호 채우기',
+    quizSet([
+      {
+        q: ['AI 가 적용될 수 있는 상황 ① — ( ', h('b', {}, '?'), ' )나 규칙이 너무 복잡한 경우'],
+        answer: ['데이터'], hint: '규칙과 짝을 이루는 말입니다.',
+        explain: '복잡한 규칙을 사람이 일일이 프로그래밍하면 시간과 비용이 커지므로, AI 가 규칙을 스스로 학습하게 합니다.',
+      },
+      {
+        q: '웹사이트에서 자동으로 데이터를 수집하는 기술을 무엇이라 하나요?',
+        answer: ['웹 크롤링', '크롤링', 'web crawling', 'crawling'],
+        explain: '공공 데이터·민간 데이터·직접 수집(설문·센서)과 함께 데이터 수집 방법의 하나입니다.',
+      },
+      {
+        q: '수집한 데이터의 특징과 구조를 이해하려고 여러 방면에서 탐색·시각화하는 과정을 무엇이라 하나요? (약자 3글자)',
+        answer: ['EDA', '탐색적 데이터 분석'],
+        explain: 'Exploratory Data Analysis, 탐색적 데이터 분석입니다.',
+      },
+      {
+        q: '정형 데이터는 명시적인 ( ? )이 있는 데이터입니다.',
+        answer: ['속성', '속성(특징)', '특징'],
+        explain: '표의 열에 해당하는 것이 속성(특징, 변수)이고, 행이 레코드(인스턴스)입니다.',
+      },
+      {
+        q: '데이터를 수집할 때 반드시 함께 검토해야 할 것 네 가지 중, 「특정 집단에 치우쳐 있지 않은가」를 뜻하는 말은?',
+        answer: ['편향성', '편향'],
+        explain: '편향성·공정성·개인정보 노출·저작권 네 가지를 반드시 함께 봅니다.',
+      },
+    ], { revealOnWrong: true }));
+}
