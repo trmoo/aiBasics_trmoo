@@ -21,7 +21,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, frac, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, frac, pillGroup, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
 
@@ -211,7 +211,7 @@ function lab() {
     }, '아무 규칙 없음 (R² ≈ 0)'));
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📐 회귀 지표 실험실 — 점을 위아래로 끌어 보세요',
     h('div', { class: 'lead' }, '점을 끌면 회귀선이 다시 맞춰지고 네 지표가 함께 바뀝니다.'),

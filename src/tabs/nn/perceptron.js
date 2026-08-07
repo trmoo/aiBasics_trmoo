@@ -23,8 +23,8 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider, pillGroup } from '../../lib/ui.js';
-import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider, pillGroup, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
+import { makeCanvas, scale, axes, polyline, label, COLORS } from '../../lib/chart.js';
 
 /* 논리 연산 세 가지의 정답표 */
 const GATES = {
@@ -192,7 +192,7 @@ function lab() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🎛️ 퍼셉트론 실험실 — 직선 하나로 갈라 보기',
     h('div', { class: 'lead' }, '가중치와 편향을 움직이면 결정 경계 직선이 따라 움직입니다. 네 점을 모두 올바른 쪽에 놓아 보세요.'),
@@ -234,7 +234,7 @@ function learnCard() {
   const lrSl = slider('학습률 η', { min: 0.05, max: 1, step: 0.05, value: 0.3, fmt: (v) => v.toFixed(2), onInput: (v) => { lr = v; } });
 
   function reset() {
-    if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기'; }
+    if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기'; }
     w = [0, 0]; b = 0; epoch = 0; logs = [];
     paint();
   }
@@ -321,12 +321,12 @@ function learnCard() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기'; return; }
       playBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         const changed = oneEpoch();
         if (changed === 0 || epoch > 60) {
-          clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기';
+          clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습시키기';
         }
       }, 420);
     },
@@ -334,7 +334,7 @@ function learnCard() {
 
   reset();
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🤖 퍼셉트론이 스스로 배우게 하기',
     h('div', { class: 'lead' },

@@ -25,7 +25,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, fx, drawNow, slider, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
 
@@ -248,7 +248,7 @@ function complexityLab() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🎢 과적합 실험실 — 모델을 복잡하게 만들어 보기',
     h('div', { class: 'lead' },
@@ -365,20 +365,20 @@ function epochLab() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 학습시키기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 학습시키기'; return; }
       cursor = 0; sl.value = '0'; playBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         cursor = Math.min(EPOCHS, cursor + 12);
         sl.value = String(cursor);
         paint();
-        if (cursor >= EPOCHS) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 학습시키기'; }
+        if (cursor >= EPOCHS) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 학습시키기'; }
       }, 30);
     },
   }, '▶ 처음부터 학습시키기');
 
   history = train();
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('⏱️ 학습 반복 횟수와 조기 중단',
     h('div', { class: 'lead' },

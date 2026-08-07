@@ -22,7 +22,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, pillGroup, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, axes, dot, polyline, label, drawBox, COLORS, ticks } from '../../lib/chart.js';
 
@@ -261,7 +261,7 @@ function lab() {
     }, '마지막 하나 빼기'));
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🔢 기술 통계 실험실',
     h('div', { class: 'lead' }, '숫자를 고치거나 점 그래프를 눌러 값을 더해 보세요. 모든 통계량이 곧바로 다시 계산됩니다.'),
@@ -388,7 +388,7 @@ function shapeCard() {
   skewSl.addEventListener('input', paint);
   kurtSl.addEventListener('input', paint);
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📐 왜도와 첨도 — 분포의 「모양」',
     h('div', { class: 'lead' },

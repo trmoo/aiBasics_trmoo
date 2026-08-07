@@ -25,7 +25,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, pillGroup, clearScreenInterval, screenInterval } from '../../lib/ui.js';
 
 const N = 8;
 const K = 3;
@@ -263,12 +263,12 @@ function convLab() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 슬라이딩'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 슬라이딩'; return; }
       pos = 0; playBtn.textContent = '⏸ 멈추기';
       paint();
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         pos++;
-        if (pos >= OUT * OUT) { pos = OUT * OUT - 1; clearInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 슬라이딩'; }
+        if (pos >= OUT * OUT) { pos = OUT * OUT - 1; clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 처음부터 슬라이딩'; }
         paint();
       }, 160);
     },

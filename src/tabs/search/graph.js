@@ -26,7 +26,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, fx, drawNow, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, drawNow, pillGroup, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
 import { makeCanvas, label, COLORS } from '../../lib/chart.js';
 
 /* ─────────────────────────── 그래프 자료 ────────────────────────── */
@@ -207,7 +207,7 @@ function bfsDfsCard() {
   ], { value: 'bfs', onPick: (v) => { mode = v; reload(); } });
 
   function reload() {
-    if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; }
+    if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; }
     run = runSearch(G, mode);
     idx = 0;
     paint();
@@ -294,14 +294,14 @@ function bfsDfsCard() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; return; }
       if (idx >= run.steps.length - 1) idx = 0;
       playBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         idx++;
         if (idx >= run.steps.length - 1) {
           idx = run.steps.length - 1;
-          clearInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생';
+          clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생';
         }
         paint();
       }, 700);
@@ -328,7 +328,7 @@ function bfsDfsCard() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🔎 너비 우선 탐색 · 깊이 우선 탐색',
     h('div', { class: 'lead' }, '각 레벨에서 자식 상태는 알파벳 순으로 생성합니다.'),
@@ -533,7 +533,7 @@ function ucsCard() {
   buildEditor();
   reload();
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('💰 균일 비용 탐색 — 도시 a 에서 e 까지 가장 빠른 길',
     h('div', { class: 'lead' },

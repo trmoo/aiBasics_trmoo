@@ -26,7 +26,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pillGroup, clearScreenInterval, screenInterval } from '../../lib/ui.js';
 
 const N = 6;
 
@@ -309,14 +309,14 @@ function gridLab() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생'; return; }
       idx = 0; playBtn.textContent = '⏸ 멈추기';
       paint();
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         idx++;
         if (idx >= steps.length - 1) {
           idx = steps.length - 1;
-          clearInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생';
+          clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 자동 재생';
         }
         paint();
       }, 420);

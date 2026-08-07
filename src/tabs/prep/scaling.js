@@ -21,7 +21,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, dot, label, COLORS, ticks } from '../../lib/chart.js';
 
@@ -153,7 +153,7 @@ function compareCard() {
   });
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('⚖️ 최소-최대 정규화 vs 표준화',
     table(['', '최소-최대 정규화 (min-max scaling)', '표준화 (standard scaling)'], [
@@ -236,7 +236,7 @@ function outlierCard() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🔬 이상치가 있으면 어떻게 될까',
     h('div', { class: 'lead' }, '보통 값 9개(45~78)에 이상치 하나를 더했습니다. 그 값을 키우면서 두 방법을 견주어 보세요.'),

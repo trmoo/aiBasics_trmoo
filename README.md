@@ -1,5 +1,7 @@
 # 인공지능 기초 실습실
 
+### 👉 **[바로 열어 보기 — https://trmoo.github.io/aiBasics_trmoo/](https://trmoo.github.io/aiBasics_trmoo/)**
+
 고등학교 2학년 **「인공지능 기초」** 학습지를 브라우저에서 **직접 조작해 보는** 웹앱입니다.
 
 학습지가 「빈칸을 채우는 종이」라면, 이 앱은 그 빈칸의 값을 **직접 만들어 보는 실험실**입니다.
@@ -66,7 +68,10 @@
 ## 설치와 실행
 
 ### 그냥 쓰기 (권장)
-`dist/index.html` 파일 하나만 있으면 됩니다. 더블클릭하세요. 설치도 인터넷도 필요 없습니다.
+- **인터넷이 되는 교실** — [https://trmoo.github.io/aiBasics_trmoo/](https://trmoo.github.io/aiBasics_trmoo/) 로 들어가면 됩니다.
+- **인터넷이 안 되는 교실** — 위 주소에서 페이지를 저장하거나(`Ctrl+S`),
+  아래처럼 직접 빌드해 나온 `dist/index.html` **한 파일**을 USB로 옮겨 더블클릭하세요.
+  설치도 인터넷도 필요 없습니다.
 
 ### 고쳐 쓰기
 ```bash

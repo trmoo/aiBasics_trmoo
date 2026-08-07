@@ -23,7 +23,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, slider, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
 import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
 
 export function render(root) {
@@ -94,7 +94,7 @@ function gdCard() {
   });
 
   function reset(start = -2.4) {
-    if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기'; }
+    if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기'; }
     x = start; trail.length = 0; trail.push(x);
     paint();
   }
@@ -166,12 +166,12 @@ function gdCard() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기'; return; }
       playBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         stepOnce();
         if (Math.abs(dL(x)) < 0.005 || Math.abs(x) > 11 || trail.length > 250) {
-          clearInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기';
+          clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 굴려 보기';
         }
       }, 90);
     },
@@ -179,7 +179,7 @@ function gdCard() {
 
   reset();
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('⛰️ 경사하강법 — 눈을 감고 산에서 내려오기',
     h('div', { class: 'lead' },
@@ -372,7 +372,7 @@ function xorTrainCard() {
   sl.addEventListener('input', () => { cursor = Number(sl.value); paint(); });
 
   function load(seed) {
-    if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; }
+    if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; }
     snaps = trainAll(seed);
     sl.max = String(snaps.length - 1);
     cursor = snaps.length - 1;
@@ -383,20 +383,20 @@ function xorTrainCard() {
   const playBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; return; }
       cursor = 0; sl.value = '0'; playBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         cursor = Math.min(snaps.length - 1, cursor + 1);
         sl.value = String(cursor);
         paint();
-        if (cursor >= snaps.length - 1) { clearInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; }
+        if (cursor >= snaps.length - 1) { clearScreenInterval(timer); timer = null; playBtn.textContent = '▶ 학습 보기'; }
       }, 28);
     },
   }, '▶ 학습 보기');
 
   load(1234);
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🧪 신경망이 XOR 을 스스로 배우는 것을 지켜보기',
     h('div', { class: 'lead' },

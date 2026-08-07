@@ -26,6 +26,47 @@
  * limitations under the License.
  * ========================================================================== */
 
+/* ────────────────────────── 화면 수명 관리 ──────────────────────────
+ * 탭이나 꼭지를 옮기면 main.js 가 화면을 통째로 지우고 다시 그린다.
+ * 그런데 지워지는 것은 화면에 붙어 있던 태그뿐이라, 그 화면이 window 에 걸어 둔
+ * resize 리스너와 setInterval 타이머는 그대로 살아남는다.
+ * 그러면 화면을 옮길 때마다 그것들이 쌓여, 이미 사라진 캔버스를 계속 다시 그리게 된다.
+ *
+ * 그래서 화면 하나마다 「수명」을 하나 두고, 새 화면을 그리기 직전에 이전 것을 걷어 낸다.
+ * 각 탭 모듈은 window.addEventListener 나 setInterval 을 직접 쓰지 말고
+ * 아래의 onResize() · screenInterval() 을 쓴다.
+ */
+
+let screen = null;
+
+/** main.js 가 새 화면을 그리기 직전에 부른다 — 이전 화면의 뒷정리를 한다 */
+export function beginScreen() {
+  if (screen) {
+    screen.controller.abort();          // 걸어 둔 리스너를 브라우저가 알아서 떼어 낸다
+    screen.timers.forEach(clearInterval); // 돌던 애니메이션 타이머를 멈춘다
+  }
+  screen = { controller: new AbortController(), timers: new Set() };
+  return screen;
+}
+
+/** 창 크기가 바뀔 때 다시 그린다. 화면을 옮기면 자동으로 떨어진다. */
+export function onResize(fn) {
+  window.addEventListener('resize', fn, screen ? { signal: screen.controller.signal } : undefined);
+}
+
+/** setInterval 과 같지만, 화면을 옮기면 자동으로 멈춘다. */
+export function screenInterval(fn, ms) {
+  const id = setInterval(fn, ms);
+  if (screen) screen.timers.add(id);
+  return id;
+}
+
+/** screenInterval 로 만든 타이머를 손으로 멈춘다. */
+export function clearScreenInterval(id) {
+  clearInterval(id);
+  if (screen) screen.timers.delete(id);
+}
+
 /**
  * 태그 하나를 만든다.
  *   h('div', { class: 'card' }, '글자', h('b', {}, '굵게'))
@@ -90,12 +131,6 @@ export function pyBox(code, ...extra) {
   return h('details', { class: 'py' },
     h('summary', {}, '파이썬으로는 이렇게 씁니다'),
     h('div', {}, h('pre', { class: 'code' }, code), ...extra));
-}
-
-/** 통계값 한 칸 */
-export function stat(k, v, kind = '') {
-  const val = h('div', { class: 'v' }, String(v));
-  return { el: h('div', { class: 'stat' + (kind ? ' ' + kind : '') }, h('div', { class: 'k' }, k), val), set: (x) => { val.textContent = String(x); } };
 }
 
 /* ──────────────────────────── ( 괄호 정답 ) ──────────────────────────── */
@@ -367,25 +402,6 @@ export const comma = (n) => Number(n).toLocaleString('ko-KR');
 
 /** 소수점 자리 맞춰 문자열로 (NaN 은 '–') */
 export const fx = (n, d = 2) => (Number.isFinite(n) ? Number(n).toFixed(d) : '–');
-
-/** min 이상 max 이하의 정수 하나 */
-export const randInt = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
-
-/** 배열에서 하나 고르기 */
-export const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-/** 배열 섞기 (원본을 바꾸지 않는다) */
-export function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-/** 값을 min~max 안으로 밀어 넣는다. */
-export const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
 /**
  * 캔버스를 처음 그릴 때 쓴다.

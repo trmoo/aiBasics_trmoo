@@ -22,7 +22,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, sortQuiz, table, pyBox, fx, drawNow, pillGroup, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, sortQuiz, table, pyBox, fx, drawNow, pillGroup, slider, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
 
@@ -179,7 +179,7 @@ function clsRegCard() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📈 분류와 회귀는 무엇이 다를까',
     h('div', { class: 'lead' }, '둘 다 「데이터를 가장 잘 대변하는 함수」를 찾는 일입니다. 다만 그 함수가 하는 일이 다릅니다.'),
@@ -318,15 +318,15 @@ function kmeansCard() {
   const autoBtn = h('button', {
     type: 'button', class: 'btn',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; return; }
       autoBtn.textContent = '⏸ 멈추기';
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         const before = JSON.stringify(cents);
         next();
         if (step > 2 && step % 2 === 0 && JSON.stringify(cents) === before) {
-          clearInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기';
+          clearScreenInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기';
         }
-        if (step > 40) { clearInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; }
+        if (step > 40) { clearScreenInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; }
       }, 700);
     },
   }, '▶ 자동으로 돌리기');
@@ -334,7 +334,7 @@ function kmeansCard() {
   makePoints();
   reset(5);
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🔵 k-평균 군집화 — 정답 없이 스스로 무리 짓기',
     h('div', { class: 'lead' },
@@ -344,7 +344,7 @@ function kmeansCard() {
     h('div', { class: 'row', style: { marginTop: '8px' } },
       h('button', { type: 'button', class: 'btn ghost', onclick: next }, '⏭ 한 걸음만'),
       autoBtn,
-      h('button', { type: 'button', class: 'btn gray', onclick: () => { if (timer) { clearInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; } reset(Math.floor(Math.random() * 9999)); } }, '🎲 중심 다시 놓기')),
+      h('button', { type: 'button', class: 'btn gray', onclick: () => { if (timer) { clearScreenInterval(timer); timer = null; autoBtn.textContent = '▶ 자동으로 돌리기'; } reset(Math.floor(Math.random() * 9999)); } }, '🎲 중심 다시 놓기')),
     cv.el, stepBox,
     note('', h('b', {}, 'k-평균이 하는 일은 딱 두 가지의 반복입니다. '),
       '① 모든 점을 가장 가까운 중심에 배정한다. ② 각 무리의 평균 자리로 중심을 옮긴다. ',

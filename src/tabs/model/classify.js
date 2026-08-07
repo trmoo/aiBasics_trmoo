@@ -24,9 +24,9 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, frac, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, frac, slider, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
-import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
+import { makeCanvas, scale, axes, polyline, label, COLORS } from '../../lib/chart.js';
 
 const pct = (v) => (Number.isFinite(v) ? (v * 100).toFixed(1) + '%' : '–');
 
@@ -393,7 +393,7 @@ function thresholdCard() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🎚️ 임계값 실험실 — 정밀도와 재현율은 왜 같이 못 올릴까',
     h('div', { class: 'lead' },
