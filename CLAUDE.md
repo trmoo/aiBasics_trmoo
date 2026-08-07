@@ -93,6 +93,15 @@
 그 뒤로는 푸시만 하면 자동 배포된다. 워크플로의 해당 단계는 `continue-on-error` 로 두어
 권한이 없어도 배포가 멈추지 않게 고쳐 두었다.
 
+**⚠️⚠️ 「Deploy from a branch」 를 고르면 안 된다 (2026-08-07 실제로 겪음)**
+Source 를 「Deploy from a branch → main / (root)」 로 두면 깃허브가 **빌드하지 않은 저장소 원본**을
+그대로 올린다. 그러면 개발용 `index.html`(1,086바이트)이 서비스되는데,
+이 파일은 `/src/main.js` 를 절대경로로 부르므로 `https://<아이디>.github.io/src/main.js` 를 찾다가
+404 가 나고 **흰 화면**만 뜬다. (실제 올라가야 할 것은 빌드 결과 360KB 짜리 한 파일이다.)
+`dist/` 는 규칙대로 커밋하지 않으므로 브랜치 방식으로는 **원리상 동작할 수 없다.**
+증상 구분법 — Actions 탭에 `pages build and deployment`(깃허브 내장 브랜치 빌더)가
+성공으로 찍혀 있고 우리 워크플로 `Deploy to GitHub Pages` 는 실패해 있으면 이 경우다.
+
 혹시 그래도 안 되면 Settings → Actions → General → Workflow permissions 를
 「Read and write permissions」 로 바꾸면 `enablement: true` 가 동작할 수도 있다.
 
