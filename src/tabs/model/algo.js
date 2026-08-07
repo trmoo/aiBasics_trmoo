@@ -9,20 +9,10 @@
  * 학습지의 야구 트리 그림은 원본이 이미지라 잎(마지막 칸)의 이름까지는 알 수 없었다.
  * 정답으로 주어진 길(타율 0.210 · 방어율 0.8 → 선발 투수)이 그대로 나오도록 다시 짰다.
  *
- * Copyright 2026 trmoo
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * © 2026 티쳐무 · 모든 권리 보유
+ * 학교 수업 목적으로만 이용해 주세요. 무단 배포와 상업적 이용을 금합니다.
+ * 그 밖의 이용(재배포·2차 저작물·수업 외 목적)은 먼저 문의해 주세요.
+ * 자세한 이용 범위는 이 저장소의 LICENSE 파일에 적어 두었습니다.
  * ========================================================================== */
 
 import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, slider, onResize } from '../../lib/ui.js';

@@ -9,20 +9,10 @@
  * 다항 회귀는 최소제곱법(정규방정식)을 가우스 소거법으로 직접 풀어 구현했다.
  * x 를 -1~1 로 옮겨 놓고 계산해 차수가 높아져도 수가 터지지 않게 했다.
  *
- * Copyright 2026 trmoo
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * © 2026 티쳐무 · 모든 권리 보유
+ * 학교 수업 목적으로만 이용해 주세요. 무단 배포와 상업적 이용을 금합니다.
+ * 그 밖의 이용(재배포·2차 저작물·수업 외 목적)은 먼저 문의해 주세요.
+ * 자세한 이용 범위는 이 저장소의 LICENSE 파일에 적어 두었습니다.
  * ========================================================================== */
 
 import { h, add, clear, card, sheetHead, note, answer, quizSet, table, fx, drawNow, slider, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';

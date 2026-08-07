@@ -9,20 +9,10 @@
  * 학습지 18쪽 예제(입력 8×8, 필터 [-1 0 1] 반복, 출력 6×6)를 그대로 다룰 수 있게 했다.
  * 원본 입력 그림은 이미지라 값을 읽을 수 없어, 세로 경계가 두 번 나타나는 자료를 기본으로 넣었다.
  *
- * Copyright 2026 trmoo
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * © 2026 티쳐무 · 모든 권리 보유
+ * 학교 수업 목적으로만 이용해 주세요. 무단 배포와 상업적 이용을 금합니다.
+ * 그 밖의 이용(재배포·2차 저작물·수업 외 목적)은 먼저 문의해 주세요.
+ * 자세한 이용 범위는 이 저장소의 LICENSE 파일에 적어 두었습니다.
  * ========================================================================== */
 
 import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, pillGroup, clearScreenInterval, screenInterval } from '../../lib/ui.js';

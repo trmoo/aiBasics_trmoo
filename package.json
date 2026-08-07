@@ -2,8 +2,8 @@
   "name": "ai-basics-lab",
   "version": "1.0.0",
   "description": "고등학교 2학년 「인공지능 기초」 노트 실습실 — 학습지 전체를 직접 조작해 보는 인터랙티브 학습앱",
-  "license": "Apache-2.0",
-  "author": "trmoo",
+  "license": "UNLICENSED",
+  "author": "티쳐무 (trmoo)",
   "homepage": "https://trmoo.github.io/aiBasics_trmoo/",
   "repository": {
     "type": "git",

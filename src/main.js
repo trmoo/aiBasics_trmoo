@@ -7,20 +7,10 @@
  *     그 아래 알약 단추 = 학습지 꼭지
  *   주소창의 #대단원/꼭지 로 위치가 남으므로 새로고침해도 보던 곳이 그대로 열린다.
  *
- * Copyright 2026 trmoo
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * © 2026 티쳐무 · 모든 권리 보유
+ * 학교 수업 목적으로만 이용해 주세요. 무단 배포와 상업적 이용을 금합니다.
+ * 그 밖의 이용(재배포·2차 저작물·수업 외 목적)은 먼저 문의해 주세요.
+ * 자세한 이용 범위는 이 저장소의 LICENSE 파일에 적어 두었습니다.
  * ========================================================================== */
 
 import './style.css';
@@ -209,13 +199,10 @@ window.addEventListener('hashchange', () => readHash());
 app.append(topbar, subNav, main,
   h('div', { class: 'footer' },
     h('div', {}, '인공지능 기초 실습실 · 2022 개정 교육과정 고등학교 「인공지능 기초」 · 학생 개인정보를 수집하거나 저장하지 않습니다.'),
-    h('div', { style: { marginTop: '6px' } },
-      'Copyright 2026 trmoo · ',
-      h('a', {
-        href: 'http://www.apache.org/licenses/LICENSE-2.0',
-        target: '_blank', rel: 'noopener',
-        style: { color: 'inherit' },
-      }, 'Apache License 2.0'),
-      ' 에 따라 누구나 자유롭게 쓰고 고치고 나눌 수 있습니다.')));
+    h('div', { style: { marginTop: '8px', fontWeight: '700' } },
+      '© 2026 티쳐무 · 모든 권리 보유'),
+    h('div', { style: { marginTop: '2px' } },
+      '학교 수업 목적으로만 이용해 주세요. 무단 배포와 상업적 이용을 금합니다. ',
+      '그 밖의 이용(재배포·2차 저작물·수업 외 목적)은 먼저 문의해 주세요.')));
 
 if (!readHash()) go(tabId, sheetId);
