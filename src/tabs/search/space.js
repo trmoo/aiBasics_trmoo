@@ -23,7 +23,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, fx, drawNow } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, drawNow, clearScreenInterval, onResize, screenInterval } from '../../lib/ui.js';
 import { makeCanvas, label, COLORS } from '../../lib/chart.js';
 
 export function render(root) {
@@ -148,7 +148,7 @@ function riverCard() {
   const SOLUTION = solveRiver();
 
   function reset() {
-    if (timer) { clearInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; }
+    if (timer) { clearScreenInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; }
     st = [0, 0, 0, 0]; boat = null; history = [[0, 0, 0, 0]]; msg = null;
     paint();
   }
@@ -315,13 +315,13 @@ function riverCard() {
   const autoBtn = h('button', {
     type: 'button', class: 'btn ghost',
     onclick: () => {
-      if (timer) { clearInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; return; }
+      if (timer) { clearScreenInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; return; }
       reset();
       autoBtn.textContent = '⏸ 멈추기';
       let i = 1;
-      timer = setInterval(() => {
+      timer = screenInterval(() => {
         if (i >= SOLUTION.length) {
-          clearInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; return;
+          clearScreenInterval(timer); timer = null; autoBtn.textContent = '🤖 컴퓨터가 풀어 주기'; return;
         }
         st = SOLUTION[i].slice();
         history.push(st.slice());
@@ -332,7 +332,7 @@ function riverCard() {
   }, '🤖 컴퓨터가 풀어 주기');
 
   drawNow(paint);
-  window.addEventListener('resize', drawGraph);
+  onResize(drawGraph);
 
   return card('🛶 강 건너기 문제',
     h('div', { class: 'lead' },
@@ -522,7 +522,7 @@ function hanoiCard() {
 
   reset(3);
   drawNow(paint);
-  window.addEventListener('resize', drawGraph);
+  onResize(drawGraph);
 
   return card('🗼 하노이 타워',
     h('div', { class: 'lead' },

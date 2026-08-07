@@ -70,14 +70,24 @@
 **상태: 완성. 빌드·시험·브라우저 점검 모두 통과.** (2026-08-07)
 
 - `npm test` → **98가지 통과** (학습지 정답을 지키는 회귀 시험)
-- `npm run build` → `dist/index.html` 한 파일 약 275KB, 더블클릭 실행
+- `npm run build` → `dist/index.html` 한 파일 **약 360KB**(실측 361,397바이트), 더블클릭 실행
+  - ⚠️ vite 가 콘솔에 찍는 「275.49 kB」는 실제 파일 크기가 아니다.
+    vite 는 **글자 수**를 세는데, 한글 한 글자는 UTF-16 으로 1칸이지만 UTF-8 로 저장하면 3바이트다.
+    이 앱은 한글이 많아 콘솔 숫자가 실제보다 24% 작게 나온다. 실제 크기는 `wc -c dist/index.html` 로 볼 것.
 - 브라우저 점검: 23개 화면 전부 오류 없음, 모든 단추를 눌러도 예외 0건,
   1265px·753px 두 너비에서 가로 넘침 없음
+
+### 배포
+- 저장소: https://github.com/trmoo/aiBasics_trmoo
+- Pages: https://trmoo.github.io/aiBasics_trmoo/
+- `.github/workflows/deploy.yml` 이 **푸시할 때마다** `npm ci` → `npm test` → `npm run build` 를 돌리고
+  `dist/` 를 Pages 에 올린다. **`dist/` 는 커밋하지 않는다.**
+- `configure-pages@v5` 의 `enablement: true` 덕분에 Settings → Pages 를 손으로 켤 필요가 없다.
+- 시험이 실패하면 배포도 멈춘다. 학습지 정답이 깨진 채로 공개되는 일을 막기 위한 것.
 
 ### 다음에 할 만한 일
 - 학습지 36쪽 pandas 요약(`df[]`, `loc`, `drop`, `fillna`)을 실습 화면으로 (지금은 각 탭의 🐍 접이 상자에만 있음)
 - 학습지 34~35쪽 모럴 머신 [4] [5] 서술 문항 (지금은 [1]~[3] 만)
-- 깃허브 저장소·Pages 개설 (`.github/workflows/deploy.yml` 아직 없음)
 
 ---
 

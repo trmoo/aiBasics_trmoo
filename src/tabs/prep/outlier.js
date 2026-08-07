@@ -22,7 +22,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, dot, polyline, label, drawBox, COLORS, ticks } from '../../lib/chart.js';
 
@@ -211,7 +211,7 @@ function lab() {
     }));
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🔴 이상치 탐지기 (IQR)',
     h('div', { class: 'lead' }, '점을 끌어 옮기면 경계가 다시 계산됩니다. 빈 곳을 누르면 점이 하나 더해집니다. 빨간 점이 이상치입니다.'),
@@ -283,7 +283,7 @@ function regressDemo() {
 
   sl.addEventListener('input', paint);
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📉 이상치 하나가 회귀선을 얼마나 흔들까',
     h('div', { class: 'lead' }, '빨간 점의 높이를 슬라이더로 바꿔 보세요. 점 하나 때문에 선 전체가 기울어집니다.'),

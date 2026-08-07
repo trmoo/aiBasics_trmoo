@@ -25,7 +25,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, comma, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, comma, pillGroup, clearScreenInterval, screenInterval } from '../../lib/ui.js';
 
 export const START = [2, 8, 3, 1, 0, 4, 7, 6, 5];
 export const GOAL = [1, 2, 3, 8, 0, 4, 7, 6, 5];
@@ -455,11 +455,11 @@ function compareCard() {
             h('button', {
               type: 'button', class: 'btn small',
               onclick: () => {
-                if (timer) { clearInterval(timer); timer = null; return; }
+                if (timer) { clearScreenInterval(timer); timer = null; return; }
                 step = 0;
-                timer = setInterval(() => {
+                timer = screenInterval(() => {
                   step++;
-                  if (step >= p.length - 1) { step = p.length - 1; clearInterval(timer); timer = null; }
+                  if (step >= p.length - 1) { step = p.length - 1; clearScreenInterval(timer); timer = null; }
                   paintReplay();
                 }, 600);
               },

@@ -25,8 +25,8 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, slider } from '../../lib/ui.js';
-import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
+import { h, add, clear, card, sheetHead, note, answer, answerBlock, quizSet, table, pyBox, fx, drawNow, slider, onResize } from '../../lib/ui.js';
+import { makeCanvas, scale, axes, polyline, label, COLORS } from '../../lib/chart.js';
 
 export function render(root) {
   add(root, sheetHead('심화 학습지 11~12쪽', 'k-최근접 이웃과 의사결정트리',
@@ -195,7 +195,7 @@ function knnCard() {
   cv.el.addEventListener('pointercancel', stop);
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('⭐ k-최근접 이웃(KNN) 실험실',
     h('div', { class: 'lead' },
@@ -350,7 +350,7 @@ function treeCard() {
   [avgInp, eraInp].forEach((el) => el.addEventListener('input', paint));
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🌲 의사결정트리 — 스무고개로 분류하기',
     h('div', { class: 'lead' },

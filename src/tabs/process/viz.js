@@ -25,7 +25,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, table, pyBox, fx, drawNow, pillGroup, onResize } from '../../lib/ui.js';
 import * as S from '../../lib/stats.js';
 import { makeCanvas, scale, axes, dot, polyline, label, drawBox, corrColor, COLORS, ticks } from '../../lib/chart.js';
 
@@ -266,7 +266,7 @@ function gallery() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📊 같은 자료를 다섯 가지 그래프로',
     picker.el,
@@ -417,7 +417,7 @@ function corrLab() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('🎯 상관계수 실험실 — 점을 끌어 보세요',
     h('div', { class: 'lead' },

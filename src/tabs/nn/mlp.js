@@ -23,7 +23,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, answer, quizSet, sortQuiz, table, pyBox, fx, drawNow, pillGroup } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, answer, quizSet, sortQuiz, table, pyBox, fx, drawNow, pillGroup, onResize } from '../../lib/ui.js';
 import { makeCanvas, scale, axes, dot, polyline, label, COLORS } from '../../lib/chart.js';
 
 const X4 = [[0, 0], [1, 0], [0, 1], [1, 1]];
@@ -187,7 +187,7 @@ function xorCard() {
   function paintAll() { paintPlane(); paintNet(); paintTable(); }
 
   drawNow(paintAll);
-  window.addEventListener('resize', () => { paintPlane(); paintNet(); });
+  onResize(() => { paintPlane(); paintNet(); });
 
   return card('🕸️ 다층 신경망으로 XOR 을 풀어 보자',
     h('div', { class: 'lead' },
@@ -286,7 +286,7 @@ function actCard() {
   }
 
   drawNow(paint);
-  window.addEventListener('resize', paint);
+  onResize(paint);
 
   return card('📈 활성화 함수',
     h('div', { class: 'lead' },

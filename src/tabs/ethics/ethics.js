@@ -25,7 +25,7 @@
  * limitations under the License.
  * ========================================================================== */
 
-import { h, add, clear, card, sheetHead, note, quizSet, sortQuiz, table, fx, slider } from '../../lib/ui.js';
+import { h, add, clear, card, sheetHead, note, quizSet, sortQuiz, table, slider } from '../../lib/ui.js';
 
 export function render(root) {
   add(root, sheetHead('학습지 33~35쪽', '인공지능 윤리',

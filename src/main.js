@@ -24,7 +24,7 @@
  * ========================================================================== */
 
 import './style.css';
-import { h, clear, toggleAllAnswers } from './lib/ui.js';
+import { h, clear, toggleAllAnswers, beginScreen } from './lib/ui.js';
 
 /* Ⅰ. AI 구현 프로세스 */
 import * as pipeline from './tabs/process/pipeline.js';
@@ -173,6 +173,9 @@ function paintMain() {
   const tab = TABS.find((t) => t.id === tabId);
   const sheet = tab.sheets.find((s) => s.id === sheetId) || tab.sheets[0];
   document.documentElement.style.setProperty('--accent', tab.color);
+  // 이전 화면이 걸어 둔 resize 리스너와 애니메이션 타이머를 먼저 걷어 낸다.
+  // 그러지 않으면 화면을 옮길 때마다 쌓여서, 사라진 캔버스를 계속 다시 그리게 된다.
+  beginScreen();
   clear(main);
   try {
     sheet.mod.render(main);
